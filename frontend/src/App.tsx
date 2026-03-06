@@ -61,7 +61,7 @@ const App = () => {
           <ToolTip>tab</ToolTip> + <ToolTip>enter</ToolTip> - restart test
         </div>
         <a 
-          href="https://github.com/skarokin/ref-type"
+          href="https://github.com/davidhsiaotw/ref-type"
           tabIndex={-1}
         >
           <button 

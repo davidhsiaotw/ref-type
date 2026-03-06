@@ -1,5 +1,5 @@
 const express = require('express');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
@@ -7,7 +7,7 @@ const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 const functions = require("firebase-functions");
 
-dotenv.config({ path: '.env.local' });
+dotenv.config();
 
 const salt = 10;
 
@@ -22,7 +22,7 @@ app.use(express.json());
 // }));
 
 app.use((req, res, next) => {
-    const allowedOrigins = ["http://localhost:3000", "https://steam-link-409216.web.app"];
+    const allowedOrigins = ["http://localhost:3001"];
     const origin = req.headers.origin;
 
     if (allowedOrigins.includes(origin)) {
@@ -36,26 +36,36 @@ app.use((req, res, next) => {
 });
 app.use(cookieParser());
 
-// create a connection to the mysql database    
-const db = mysql.createConnection({
-    socketPath: `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`,
+const dbConfig = {
+    host: process.env.DB_HOST || 'localhost',
+    port: process.env.DB_PORT || 3306,
     user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_DATABASE  
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+};
+
+// create a connection pool to the mysql database
+const db = mysql.createPool(dbConfig);
+
+if (!process.env.DB_USER || !process.env.DB_DATABASE) {
+    console.warn("⚠️ Database configuration missing. skipping connection attempt.");
+} else {
+    db.getConnection((err, _) => {
+        if (err) {
+            console.error("Error connecting to database: " + err.stack);
+            return;
+        }
+        console.log("Connected to database");
+    });
+}
+
+const port = process.env.PORT || 8081;
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
 });
-
-db.connect(function(err) {
-    if (err) {
-        console.error("Error connecting to database: " + err.stack);
-        return;
-    }
-    console.log("Connected to database");
-}); 
-
-// const port = 8081;
-// app.listen(port, () => {
-//     console.log(`Server is running on port ${port}`);
-// });
 
 /* 
 *  ================================================================================
