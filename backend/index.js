@@ -22,7 +22,8 @@ app.use(express.json());
 // }));
 
 app.use((req, res, next) => {
-    const allowedOrigins = ["http://localhost:3001"];
+    const envOrigins = process.env.FRONTEND_ORIGIN ? process.env.FRONTEND_ORIGIN.split(',') : [];
+    const allowedOrigins = ["http://localhost:3001", ...envOrigins];
     const origin = req.headers.origin;
 
     if (allowedOrigins.includes(origin)) {
