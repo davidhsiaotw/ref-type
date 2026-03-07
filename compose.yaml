@@ -1,7 +1,6 @@
 services:
   backend:
     image: ${BACKEND_IMAGE:-ref-type-backend:latest}
-    build: ./backend
     container_name: backend-api
     env_file:
       - .env
@@ -18,10 +17,6 @@ services:
 
   frontend:
     image: ${FRONTEND_IMAGE:-ref-type-frontend:latest}
-    build:
-      context: ./frontend
-      args:
-        - REACT_APP_FIRE_CLOUD=/api
     container_name: frontend-ui
     ports:
       - "3001:80"
