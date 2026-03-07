@@ -11,7 +11,7 @@ services:
       DB_DATABASE: "${DB_DATABASE}"
       JWT_SECRET_KEY: "${JWT_SECRET_KEY}"
       PORT: 8081
-      FRONTEND_ORIGIN: http://localhost:3001
+      FRONTEND_ORIGIN: "http://wyxiao.games,https://wyxiao.games"
     ports:
       - "8081:8081"
 
