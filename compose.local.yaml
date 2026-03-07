@@ -21,6 +21,7 @@ services:
       retries: 5
 
   backend:
+    image: ref-type-backend:latest
     build: ./backend
     container_name: backend-api
     env_file:
@@ -40,6 +41,7 @@ services:
         condition: service_healthy
 
   frontend:
+    image: ref-type-frontend:latest
     build:
       context: ./frontend
       args:
