@@ -20,7 +20,7 @@ services:
     image: ${FRONTEND_IMAGE:-ref-type-frontend:latest}
     container_name: frontend-ui
     ports:
-      - "80:80"
+      - "8080:80"
       - "443:443"
     depends_on:
       - backend
